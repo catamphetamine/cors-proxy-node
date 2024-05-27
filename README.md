@@ -63,11 +63,13 @@ Configuration is very simple and should be specified in `config.json` file.
 
 * `port: number` — The port to listen on. Example: `8080`. This parameter is ignored when `PORT` environment variable is set.
 
-* `allowedRequestOrigins?: string[]` — An explicit "whitelist" of allowed HTTP origins to accept proxy requests from. If this configuration parameter is specified then only those HTTP origins will be allowed to send HTTP requests to this proxy server. Otherwise, all incoming HTTP requests are allowed, regardless of the HTTP origin they came from.
+* `fromOriginWhitelist?: string[]` — An explicit "whitelist" of allowed HTTP origins to accept proxy requests from. If this configuration parameter is specified then only those HTTP origins will be allowed to send HTTP requests to this proxy server. Otherwise, all incoming HTTP requests are allowed, regardless of the HTTP origin they came from.
 
-* `cookies?: boolean` — Set to `true` to enable cookies. Cookies are disabled by default. Enabling cookies requires setting both `allowedRequestOrigins` and `shareCookiesBetweenAllowedRequestOrigins` parameters. Enabling cookies is required when calling [`fetch()`](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch) with `credentials: "include"` parameter.
+* `toOriginWhitelist?: string[]` — An explicit "whitelist" of allowed HTTP origins to accept proxy requests towards. If this configuration parameter is specified then any incoming HTTP requests towards those destination origins are allowed, regardless of the `fromOriginWhitelist` setting.
 
-* `shareCookiesBetweenAllowedRequestOrigins?: boolean` — An explicit "opt-in" flag that is required to be set to `true` when enabling cookies. The only purpose of this flag is to make it explicit that, when enabled, cookies are shared between all `allowedRequestOrigins` because not everyone realizes that. I myself didn't realize it.
+* `cookies?: boolean` — Set to `true` to enable cookies. Cookies are disabled by default. Enabling cookies requires setting both `fromOriginWhitelist` and `shareCookiesBetweenOriginsInFromOriginWhitelist` parameters. Enabling cookies is required when calling [`fetch()`](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch) with `credentials: "include"` parameter.
+
+* `shareCookiesBetweenOriginsInFromOriginWhitelist?: boolean` — An explicit "opt-in" flag that is required to be set to `true` when enabling cookies. The only purpose of this flag is to make it explicit that, when enabled, cookies are shared between all originas in `fromOriginWhitelist` because not everyone realizes that. I myself didn't realize it.
 
 <!--
 ## Cookies
@@ -76,7 +78,7 @@ In order to enable cookies, one would also have to specify an explicit "whitelis
 
 To see how allowing any HTTP request origin would be a security vulnerability in this case, consider a hacker luring people into visiting their `https://hacker.com` website via the CORS proxy by providing a "phishing" link `https://proxy.com/https://hacker.com/steal-cookies` somewhere for an unsuspecting casual user to click it, resulting in stealing all their cookies for all other websites that the user has been visiting through `https://proxy.com` because their web browser would've associated all those cookies to the same `https://proxy.com` website.
 
-For that reason, enabling `cookies: true` flag also requires setting up `allowedRequestOrigins` and also explicitly enabling the `shareCookiesBetweenAllowedRequestOrigins: true` flag.
+For that reason, enabling `cookies: true` flag also requires setting up `fromOriginWhitelist` and also explicitly enabling the `shareCookiesBetweenOriginsInFromOriginWhitelist: true` flag.
 -->
 
 ### Request Headers

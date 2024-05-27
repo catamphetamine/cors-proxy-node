@@ -8,9 +8,10 @@ module.exports = function(config) {
   var port = process.env.PORT || config.port
 
   proxy.createServer({
-    originWhitelist: config.allowedRequestOrigins || [],
+    fromOriginWhitelist: config.fromOriginWhitelist || [],
+    toOriginWhitelist: config.toOriginWhitelist || [],
     useCookies: config.cookies,
-    shareCookiesBetweenAllowedRequestOrigins: config.shareCookiesBetweenAllowedRequestOrigins,
+    shareCookiesBetweenOriginsInFromOriginWhitelist: config.shareCookiesBetweenOriginsInFromOriginWhitelist,
     requiredHeadersInRequest: ['origin', 'x-requested-with'] // The HTTP request must come from a web browser.
   }).listen(port, host, function() {
     console.log(
