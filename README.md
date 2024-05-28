@@ -187,3 +187,39 @@ To prevent the use of the proxy for casual browsing, the proxy requires one of t
 There's a basic "stats" page available at `/stats` URL. It displays a list of the most recent requests to the proxy: date, time, user subnet's IP address hash (in a form of a single unicode character) and the proxied URL.
 
 When running in a containerized environment like Vercel, the proxy instance might be stopped when it doesn't receive incoming HTTP requests and then started again when an incoming HTTP request arrives. Any stats will be naturally cleared during such restart.
+
+## `<iframe/>`
+
+When proxying an `<iframe/>` contents, use the `url` query parameter apprach and also set `iframe` query parameter to a non-empty value:
+
+`http://my-cors-proxy.com:8080/?url=https%3A%2F%2Fgoogle.com&iframe=✓`
+
+This also requires adding the Proxy domain itself to `fromOriginWhitelist` configuration parameter. The reason is that when loading an `<iframe/>`, web browser will set `Origin` HTTP request header value to be the "origin" part of the URL specified in the `src` attribute of the `<iframe/>` which is a proxied URL, so the domain of it will be the Proxy domain.
+
+An additional optional URL query parameter that can be specified in this case is `transforms`: an optional list of "transformations" that would be applied to the received HTML response content. When provided, the value should be a result of calling `JSON.stringify()` on a list of `transform` objects having shape:
+
+```js
+{
+  target: "content",
+  regExp?: boolean, // set to `true` to indicate that `searchFor` is a regular expression string.
+  searchFor: string,
+  replaceWith: string
+}
+```
+
+Example:
+
+```js
+[
+  {
+    target: "content",
+    searchFor: "'/cdn-cgi/",
+    replaceWith: "'https://website.com/cdn-cgi/",
+  }
+]
+```
+
+In summary:
+* It replaces [`Content-Security-Policy`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy) HTTP response header with `frame-ancestors *;` to allow the page to be embedded on any 3rd-party website.
+* Applies any `transforms`, when provided, to the received HTML response content.
+  * For example, such transforms should convert any relative URLs found in the HTTP response to absolute ones. Otherwise, when the `<iframe/>`d page sends additional HTTP requests for "resource" files at "relative" URLs (like `/scripts/some-script.js`), those "resources" won't be found because those "relative" URLs would be resolved against the domain of the proxy server itself rather than the domain of the website being proxied.

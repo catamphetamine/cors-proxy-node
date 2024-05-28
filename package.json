@@ -1,6 +1,6 @@
 {
   "name": "cors-proxy-node",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "CORS proxy for anychan demo site",
   "main": "index.js",
   "scripts": {
@@ -22,8 +22,11 @@
   ],
   "homepage": "https://gitlab.com/catamphetamine/cors-proxy-node#readme",
   "dependencies": {
+    "connect": "^3.7.0",
     "http-proxy": "1.11.1",
-    "proxy-from-env": "0.0.1"
+    "http-proxy-interceptor": "^0.8.7",
+    "proxy-from-env": "0.0.1",
+    "stream-replace": "^1.0.0"
   },
   "engines": {
     "node": ">=18.x"
