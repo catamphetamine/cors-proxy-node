@@ -207,17 +207,24 @@ An additional optional URL query parameter that can be specified in this case is
 }
 ```
 
-Example:
+Example for proxying CloudFlare CAPTCHA page:
 
 ```js
 [
   {
     target: "content",
-    searchFor: "'/cdn-cgi/",
-    replaceWith: "'https://website.com/cdn-cgi/",
+    searchFor: "cUPMDTk: \"\\/",
+    replaceWith: "cUPMDTk: \"https://website.com/"
+  },
+  {
+    target: "content",
+    searchFor: "cpo.src = '/",
+    replaceWith: "cpo.src = 'https://website.com/"
   }
 ]
 ```
+
+Sidenote: When testing `transforms`, check the "Disable Cache (while DevTools are open)" checkbox in DevTools, otherwise it might return a previously-cached response.
 
 In summary:
 * It replaces [`Content-Security-Policy`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy) HTTP response header with `frame-ancestors *;` to allow the page to be embedded on any 3rd-party website.

@@ -1,6 +1,6 @@
 {
   "name": "cors-proxy-node",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "CORS proxy for anychan demo site",
   "main": "index.js",
   "scripts": {
