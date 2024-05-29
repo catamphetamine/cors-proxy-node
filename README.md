@@ -188,6 +188,9 @@ There's a basic "stats" page available at `/stats` URL. It displays a list of th
 
 When running in a containerized environment like Vercel, the proxy instance might be stopped when it doesn't receive incoming HTTP requests and then started again when an incoming HTTP request arrives. Any stats will be naturally cleared during such restart.
 
+<!-- Commented out `<iframe/>` support because it won't really work without replacing relative URLs with absolute ones. -->
+
+<!--
 ## `<iframe/>`
 
 When proxying an `<iframe/>` contents, use the `url` query parameter apprach and also set `iframe` query parameter to a non-empty value:
@@ -230,3 +233,4 @@ In summary:
 * It replaces [`Content-Security-Policy`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy) HTTP response header with `frame-ancestors *;` to allow the page to be embedded on any 3rd-party website.
 * Applies any `transforms`, when provided, to the received HTML response content.
   * For example, such transforms should convert any relative URLs found in the HTTP response to absolute ones. Otherwise, when the `<iframe/>`d page sends additional HTTP requests for "resource" files at "relative" URLs (like `/scripts/some-script.js`), those "resources" won't be found because those "relative" URLs would be resolved against the domain of the proxy server itself rather than the domain of the website being proxied.
+-->
